@@ -1,9 +1,14 @@
 <?php
 
+
 require('../layouts/header.php');
 require('../class/appDB.php');
 if(!isset($_SESSION['data']) && $_SESSION['data'] != 1) header('Location: ' . APP_URL .'login.php');
 
+$app = new appDB();
+if (isset($_POST['cancel'])) {
+    $app->cancel_order($_POST['request_id']);
+}
 ?>
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
@@ -54,7 +59,7 @@ if(!isset($_SESSION['data']) && $_SESSION['data'] != 1) header('Location: ' . AP
 
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
-        <li class="menu-item active">
+        <li class="menu-item">
             <a href="<?= APP_URL ?>customer" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">الرئيسية</div>
@@ -63,7 +68,7 @@ if(!isset($_SESSION['data']) && $_SESSION['data'] != 1) header('Location: ' . AP
 
         <!-- Layouts -->
 
-        <li class="menu-item">
+        <li class="menu-item active">
             <a href="<?= APP_URL ?>customer/orders.php" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Documentation">طلباتي</div>
@@ -110,15 +115,11 @@ if(!isset($_SESSION['data']) && $_SESSION['data'] != 1) header('Location: ' . AP
                                     <span class="align-middle">الحساب الشخصي</span>
                                 </a>
                             </li>
-
                             <li>
                                 <div class="dropdown-divider"></div>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="auth-login-basic.html">
-                                    <i class="bx bx-power-off me-2"></i>
-                                    <span class="align-middle">تسجيل خروج</span>
-                                </a>
+                                <a class="dropdown-item" href="<?= APP_URL ?>logout.php"><span class="align-middle"><i class="bx bx-power-off me-2"></i>تسجيل خروج</span></a>
                             </li>
                         </ul>
                     </li>
@@ -127,37 +128,70 @@ if(!isset($_SESSION['data']) && $_SESSION['data'] != 1) header('Location: ' . AP
             </div>
         </nav>
 
-        <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="row">
 
-                <?php
-                $test = new appDB();
-                $data = $test->get_all_services();
-                foreach ($data as $d) {
-                ?>
+        <?php
+        $requests = $app->get_all_request_by_ID($_SESSION['data']['id']);
+        if (count($requests) !== 0) {
+        ?>
 
-                    <div class="col-md-4 col-lg-3 mb-3">
-                        <div class="card">
-                            <img class="card-img-top h-100" src="<?= $d['iamge'] ?? 'https://via.placeholder.com/500x200' ?>" alt="">
-                            <div class="card-body">
-                                <div class="row">
-                                    <label class="card-title col-8 h5 bald"><?= $d['name'] ?></label>
-                                    <label class="card-title col-4 h6"><?= $d['price'] ?> ر.س</label>
-                                </div>
-                                <form action="<?= APP_URL ?>customer/payment.php" method="post">
-                                    <input type="hidden" name="service_id" value="<?= $d['id'] ?>">
-                                    <button class="btn btn-outline-primary w-100">طلب</button>
-                                </form>
-                            </div>
+            <div class="container-xxl flex-grow-1 container-p-y">
+                <div class="row">
+                    <div class="card">
+                        <h5 class="card-header">طلباتي</h5>
+                        <div class="table-responsive text-nowrap">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>رقم الطلب</th>
+                                        <th>الخدمة</th>
+                                        <th>العنوان</th>
+                                        <th>مقدم الخدمة</th>
+                                        <th>رقم الجوال</th>
+                                        <th>السعر</th>
+                                        <th>حالة الطلب</th>
+                                        <th>وقت الطلب</th>
+                                        <th>العمليات</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                    <?php foreach ($requests as $request) {
+                                        $service_provider = null;
+                                        if ($request['service_provider_id'] != null) $service_provider = $app->get_user_data_by_id($request['service_provider_id']);
+
+                                    ?>
+                                        <tr>
+                                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>#<?= $request['id'] ?></strong></td>
+                                            <td><?= $app->get_service_name_by_id($request['service_id']) ?></td>
+                                            <td><?= $request['address'] ?></td>
+                                            <td><?= $service_provider['username'] ?? 'لم يحدد بعد' ?></td>
+                                            <td><?= $service_provider['phonenumber'] ?? 'لم يحدد بعد' ?></td>
+                                            <td><?= $request['price'] ?></td>
+                                            <td><?= $app->status_format($request['status']); ?></td>
+                                            <td><?= (new DateTime($request['created_at']))->format('h:i:d | Y-m-d') ?></td>
+                                            <td>
+                                                <?php if ($request['status'] != 4) { ?>
+                                                    <div class="dropdown" style="position: static !important;">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <form action="" method="post">
+                                                                <input type="hidden" name="request_id" value="<?= $request['id'] ?>">
+                                                                <input class="dropdown-item" type="submit" name="cancel" value='الغاء'>
+                                                            </form>
+                                                            <!-- <a class="dropdown-item" href=""></a> -->
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-
-                <?php
-                }
-                ?>
-
-
-
+                <?php } ?>
 
 
 

@@ -3,9 +3,8 @@ $title = '| ' . 'الدفع';
 
 require('../layouts/header.php');
 require('../class/appDB.php');
-
+if(!isset($_SESSION['data']) && $_SESSION['data'] != 1) header('Location: ' . APP_URL .'login.php');
 if($_SERVER['REQUEST_METHOD'] !== "POST") header('Location: '. APP_URL.'customer/');
-
 if(!isset($_POST['service_id'])) header('Location: '. APP_URL.'customer/');
 
 
