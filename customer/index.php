@@ -115,7 +115,7 @@ if(!isset($_SESSION['data']) && $_SESSION['data'] != 1) header('Location: ' . AP
                                 <div class="dropdown-divider"></div>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="auth-login-basic.html">
+                                <a class="dropdown-item" href="<?= APP_URL ?>logout.php">
                                     <i class="bx bx-power-off me-2"></i>
                                     <span class="align-middle">تسجيل خروج</span>
                                 </a>

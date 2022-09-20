@@ -8,7 +8,7 @@ class appDB
     function __construct()
     {
         try {
-            $this->conn = new mysqli(DB_CREDS['host'], DB_CREDS['username'], DB_CREDS['password'], DB_CREDS['dbname']);
+            $this->conn = new mysqli(DB_CREDS['host'], DB_CREDS['username'], DB_CREDS['password'], DB_CREDS['dbname'],DB_CREDS['port']);
         } catch (Exception $e) {
             die("Can't connect to DB");
         }
