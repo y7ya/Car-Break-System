@@ -1,7 +1,7 @@
 <?php
 class validator{
-    public $item;  // Item could be إسم المستخدم
-    public $value; // value ahmed
+    public $item; 
+    public $value;
     
     public $errors = [];
 
@@ -71,7 +71,6 @@ class validator{
     }
 
     function errors(){
-        // var_dump($this->errors());
         return $this->errors;
     }
 

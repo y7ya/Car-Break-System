@@ -3,7 +3,7 @@ $title = '| ' . 'الدفع';
 
 require('../layouts/header.php');
 require('../class/appDB.php');
-if(!isset($_SESSION['data']) && $_SESSION['data'] != 1) header('Location: ' . APP_URL .'login.php');
+if(!isset($_SESSION['data']) || $_SESSION['data']['type'] != '1') header('Location: ' . APP_URL .'login.php');
 if($_SERVER['REQUEST_METHOD'] !== "POST") header('Location: '. APP_URL.'customer/');
 if(!isset($_POST['service_id'])) header('Location: '. APP_URL.'customer/');
 
@@ -14,8 +14,6 @@ $service = $db->get_service_by_id($_POST['service_id']);
 if(!$service)header('Location: '. APP_URL.'customer/');
 
 if(isset($_POST['pay'])){
-    var_dump($_SESSION['data']);
-
     $req = $db->newRequest($_SESSION['data']['id'],$service['id'],$_POST['address'],$service['price']);
     if($req)header('Location: '. APP_URL.'customer/orders.php');
 }

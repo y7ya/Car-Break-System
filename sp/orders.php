@@ -3,13 +3,13 @@
 
 require('../layouts/header.php');
 require('../class/appDB.php');
-if (!isset($_SESSION['data']) || $_SESSION['data']['type'] != '1') header('Location: ' . APP_URL . 'login.php');
-
+if (!isset($_SESSION['data']) || $_SESSION['data']['type'] != '2') header('Location: ' . APP_URL . 'login.php');
 $page = 'orders';
 $app = new appDB();
-
 if (isset($_POST['cancel'])) {
     $app->cancel_order($_POST['request_id']);
+}else if(isset($_POST['done'])){
+    $app->finish_request($_POST['request_id'],$_SESSION['data']['id']);
 }
 ?>
 <?php require('layouts/sidebar.php'); ?>
@@ -20,12 +20,13 @@ if (isset($_POST['cancel'])) {
 
     <!-- Content wrapper -->
     <div class="content-wrapper">
+        <!-- Content -->
 
         <?php require('layouts/navbar.php'); ?>
 
 
         <?php
-        $requests = $app->get_customer_requests_by_ID($_SESSION['data']['id']);
+        $requests = $app->get_sp_requests_by_ID($_SESSION['data']['id']);
         if (count($requests) !== 0) {
         ?>
 
@@ -37,10 +38,10 @@ if (isset($_POST['cancel'])) {
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>رقم الطلب</th>
+                                    <th>رقم الطلب</th>
                                         <th>الخدمة</th>
                                         <th>العنوان</th>
-                                        <th>مقدم الخدمة</th>
+                                        <th>العميل</th>
                                         <th>رقم الجوال</th>
                                         <th>السعر</th>
                                         <th>حالة الطلب</th>
@@ -70,10 +71,14 @@ if (isset($_POST['cancel'])) {
                                                             <i class="bx bx-dots-vertical-rounded"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <form action="" method="post">
-                                                                <input type="hidden" name="request_id" value="<?= $request['id'] ?>">
-                                                                <input class="dropdown-item" type="submit" name="cancel" value='الغاء'>
-                                                            </form>
+                                                                <form action="" method="post">
+                                                                    <input type="hidden" name="request_id" value="<?= $request['id'] ?>">
+                                                                    <button class="dropdown-item btn btn-outline-primary" name="done" type="submit"><i class="bx bx-check-square"></i> تم</button>
+                                                                </form>
+                                                                <form action="" method="post">
+                                                                    <input type="hidden" name="request_id" value="<?= $request['id'] ?>">
+                                                                    <button class="dropdown-item btn btn-outline-danger" name="cancel" type="submit"><i class="bx bx-x-circle"></i> الغاء</button>
+                                                                </form>
                                                             <!-- <a class="dropdown-item" href=""></a> -->
                                                         </div>
                                                     </div>
