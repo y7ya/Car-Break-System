@@ -8,7 +8,7 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
-*/sneat-bootstrap-html-admin-template/
+/src/sneat-bootstrap-html-admin-template
 
 # Local History for Visual Studio Code
 .history/
