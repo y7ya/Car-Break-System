@@ -82,7 +82,7 @@ class appDB
 
     public function accept_request($id, $sp_id)
     {
-        $stmt = $this->conn->prepare("UPDATE requests SET status=2,service_provider_id=? WHERE id=?");
+        $stmt = $this->conn->prepare("UPDATE requests SET status=2,service_provider_id=? WHERE id=? AND status=1");
         $stmt->bind_param('ii', $sp_id, $id);
         return $stmt->execute();
     }
@@ -92,7 +92,7 @@ class appDB
     {
         $this->conn->begin_transaction();
         try {
-            $stmt = $this->conn->prepare("UPDATE requests SET status=3 WHERE id=?");
+            $stmt = $this->conn->prepare("UPDATE requests SET status=3 WHERE id=? AND status=2");
             $stmt->bind_param('i', $req_id);
             $stmt->execute();
 
@@ -172,7 +172,7 @@ class appDB
 
     public function cancel_order($id)
     {
-        $stmt = $this->conn->prepare("UPDATE requests SET status=4 WHERE id=?");
+        $stmt = $this->conn->prepare("UPDATE requests SET status=4 WHERE id=? and (status!=3 OR status!=4)");
         $stmt->bind_param('i', $id);
         return $stmt->execute();
     }

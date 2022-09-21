@@ -10,6 +10,7 @@ $app = new appDB();
 
 if (isset($_POST['accept'])) {
     $app->accept_request($_POST['request_id'], $_SESSION['data']['id']);
+    header('Location: ' . APP_URL . 'sp/orders.php');
 }
 ?>
 
