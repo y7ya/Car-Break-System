@@ -64,16 +64,24 @@ if (isset($_POST['cancel'])) {
                                             <td><?= $app->status_format($request['status']); ?></td>
                                             <td><?= (new DateTime($request['created_at']))->format('h:i:s | Y-m-d') ?></td>
                                             <td>
-                                                <?php if ($request['status'] != 4 && $request['status'] != 3) { ?>
+                                                <?php if ($request['status'] != 4) { ?>
                                                     <div class="dropdown" style="position: static !important;">
                                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                                             <i class="bx bx-dots-vertical-rounded"></i>
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <form action="" method="post">
-                                                                <input type="hidden" name="request_id" value="<?= $request['id'] ?>">
-                                                                <input class="dropdown-item" type="submit" name="cancel" value='الغاء'>
-                                                            </form>
+                                                            <?php if ($request['status'] == 3) { ?>
+                                                                <form action="" method="post">
+                                                                    <input type="hidden" name="request_id" value="<?= $request['id'] ?>">
+                                                                    <input class="dropdown-item" type="submit" name="show_receipt" value='عرض الفاتورة'>
+                                                                </form>
+                                                            <?php } else {
+                                                            ?>
+                                                                <form action="" method="post">
+                                                                    <input type="hidden" name="request_id" value="<?= $request['id'] ?>">
+                                                                    <input class="dropdown-item" type="submit" name="cancel" value='الغاء'>
+                                                                </form>
+                                                            <?php } ?>
                                                             <!-- <a class="dropdown-item" href=""></a> -->
                                                         </div>
                                                     </div>
