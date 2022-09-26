@@ -1,4 +1,3 @@
-
 CREATE TABLE `receipt` (
   `id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
@@ -33,55 +32,38 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `phonenumber` varchar(10) NOT NULL,
   `type` int(1) NOT NULL DEFAULT 1,
-  `balance` decimal(6,2) NOT NULL
+  `balance` decimal(6,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 ALTER TABLE `receipt`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `requests`
---
+
 ALTER TABLE `requests`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `services`
---
+
 ALTER TABLE `services`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `users`
---
+
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
---
--- AUTO_INCREMENT for dumped tables
---
 
---
--- AUTO_INCREMENT for table `receipt`
---
 ALTER TABLE `receipt`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `requests`
---
+
 ALTER TABLE `requests`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
---
--- AUTO_INCREMENT for table `services`
---
-ALTER TABLE `services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
---
--- AUTO_INCREMENT for table `users`
---
+ALTER TABLE `services`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
